@@ -1,10 +1,14 @@
 #include<stdio.h>
 #include<string.h>
 //#include<iostream>
-//using namespace std;
+using namespace std;
 void cinnn(int *,int *); //输入函数
 void coutt(int *); //输出函数
+int com(int *,int *); // return 0 left大,1 right 大
 void add(int *,int *,int *);
+void sub(int *,int *,int *);
+void mul(int *,int *,int *);
+void div(int *,int *,int *);
 int main()
 {
     int i,j,k;
@@ -16,6 +20,8 @@ int main()
     printf("\n");
     coutt(right);
     printf("\n");
+    sub(left,right,ans);
+    coutt(ans);
     return 0;
 }
 void cinnn(int left[],int right[])
@@ -55,7 +61,60 @@ void coutt (int a[])
     }
 
 }
+int com(int a[],int b[])
+{
+    int i;
+    for(i=0;i<30;i++)
+    {
+        if(a[i]>b[i]) return 0;
+        else if(b[i]>a[i]) return 1;
+    }
+}
 void add(int a[],int b[],int ans[])
 {
-    ;
+    int jinwei=0;
+    int i,j,k;
+    for(i=29;i>=0;i--)
+    {
+        ans[i]=a[i]+b[i]+jinwei;
+        jinwei=ans[i]/10;
+        ans[i]-=jinwei*10;
+    }
+
+}
+void sub(int a[],int b[],int ans[])
+{
+    int jinwei=0;
+    int i,j,k;
+    if(com(a,b))
+    {
+        sub(b,a,ans);
+        return ;
+    }
+    for(i=29;i>=0;i--)
+    {
+        a[i]+=jinwei;
+     //    cout<<"! "<<jinwei<<"  "<<a[i]<<" !"<<endl;
+        if(a[i]<b[i])
+        {
+            a[i]+=10;
+            a[i]-=b[i];
+            jinwei=-1;
+        }
+        else
+        {
+            a[i]-=b[i];
+            jinwei=0;
+        }
+        ans[i]=a[i];
+    }
+}
+void mul(int a[],int b[],int c[])
+{
+    int jinwei=0;
+    int i,j,k;
+    for(i=29;i>=0;i--)
+    {
+//        for(j=30;)
+    }
 }
