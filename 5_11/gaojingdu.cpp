@@ -4,8 +4,8 @@
 //除法，那就呵呵了，困了，为了加减乘除完整应付的，且效率特别低，商越大，时间越长
 #include<stdio.h>
 #include<string.h>
-#include<iostream>
-using namespace std;
+//#include<iostream>
+//using namespace std;
 void cinnn(int *,int *); //输入函数
 void coutt(int *); //输出函数
 int com(int *,int *); // return 0 left大,1 right 大
