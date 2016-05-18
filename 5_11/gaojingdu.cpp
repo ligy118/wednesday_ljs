@@ -4,8 +4,8 @@
 //除法，因为用到了乘法，所以有效范围也有限
 #include<stdio.h>
 #include<string.h>
-#include<iostream>
-using namespace std;
+//#include<iostream>
+//using namespace std;
 void cinnn(int *,int *); //输入函数
 void coutt(int *); //输出函数
 int com(int *,int *); // 比较函数 return 0 left大,1 right 大
