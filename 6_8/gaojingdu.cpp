@@ -1,61 +1,83 @@
 //连续两次都出意外，好气啊
+/*
+玛德智障
+在半学期的时候布置了一个几乎没几个人能完成的任务
+交作业互评各种套路走完
+又承认了作业太难
+课堂上带着写了输入输入加法，你们自己回去写减法啊，每周写一个，然后交，互评
+这次交添加了对负数的支持，下次咋整？支持复数
+手动【滑稽】
+*/
 #include<stdio.h>
 #include<string.h>
-//#include<iostream>
-//using namespace std;
-void cinnn(int *,int *); //输入函数
+int cinnn(int *); //输入函数，返回-1程序结束 返回0输入成功
 void coutt(int *); //输出函数
-int com(int *,int *); // 比较函数 return 0 left大,1 right 大
-void add(int *,int *,int *);// +
-void sub(int *,int *,int *);// -
+int com(int *,int *); // 比较函数 return 0 left大,1 right 大  范围两个正数
+void add(int ,int ,int *,int *,int *);// +
+void sub(int ,int ,int *,int *,int *);// -
 void mul(int *,int *,int *);// *
 void div(int *,int *,int *);// /
+//有关符号，0为正，1为负
+int q=1;
 int main()
 {
+    int status;
     int i,j,k;
-    int left[100]={0},right[100]={0};
-    int addans[100]={0},subans[100]={0},mulans[100]={0},divans[100]={0};
-    cinnn(left,right);
-    add(left,right,addans);
-    printf("加法运算的结果: ");
-    coutt(addans);
-    printf("\n");
-    sub(left,right,subans);
-    printf("减法运算的结果: ");
-    coutt(subans);
-    printf("\n");
-    mul(left,right,mulans);
-    printf("乘法运算的结果: ");
-    coutt(mulans);
-    printf("\n");
-    div(left,right,divans);
-    printf("除法运算的结果: ");
-    coutt(divans);
-    printf("\n");
+    int left[100],right[100];
+    int addans[100],subans[100],mulans[100],divans[100];
+    while(1)
+    {
+        for(i=0;i<100;i++) left[i]=right[i]=addans[i]=subans[i]=mulans[i]=divans[i]=0;
+        printf("输入两个实数，以空格或者换行隔开，或者输入q离开\n");
+        status=cinnn(left);
+        if(status==-1) {printf("bye~\n");return 0;}
+        cinnn(right);
+        add(left[35],right[35],left,right,addans);
+        printf("加法运算的结果: ");
+        coutt(addans);
+        printf("\n");
+        sub(left[35],right[35],left,right,subans);
+        printf("减法运算的结果: ");
+        coutt(subans);
+        printf("\n");
+        mul(left,right,mulans);
+        printf("乘法运算的结果: ");
+        coutt(mulans);
+        printf("\n");
+        div(left,right,divans);
+        printf("除法运算的结果: ");
+        coutt(divans);
+        printf("\n");
+        printf("\n");
+    }
+
     return 0;
 }
-void cinnn(int left[],int right[])
+int cinnn(int in[])
 {
-    char a[100],b[100];
-    char *tapoint,*tbpoint;
-    int an,bn,apoint,bpoint;
+    char a[100];
+    char *point;
+    int n,intn;
     int i,j,k;
-    scanf("%s%s",a,b);
-//  cout<<a<<endl<<b<<endl;
-    an=strlen(a);
-    bn=strlen(b);
-    tapoint=strchr(a,'.');
-    tbpoint=strchr(b,'.');
-    if(tapoint) apoint=tapoint-a;
-    else apoint=an;
-    if(tbpoint) bpoint=tbpoint-b;
-    else bpoint=bn;
-//  cout<<an<<"   "<<bn<<endl;
-//  cout<<apoint<<"   "<<bpoint<<endl;
-    for(i=19-apoint+1;i<=19;i++) left[i]=a[i-20+apoint]-'0';
-    for(i=20;i<20+an-apoint-1;i++) left[i]=a[i-20+1+apoint]-'0';
-    for(i=19-bpoint+1;i<=19;i++) right[i]=b[i-20+bpoint]-'0';
-    for(i=20;i<20+bn-bpoint-1;i++) right[i]=b[i-20+1+bpoint]-'0';
+    scanf("%s",a);
+    if(a[0]=='q'||a[0]=='Q') return -1;
+    if(a[0]=='-')
+    {
+        in[35]=1;
+        i=0;
+        while(a[i]!='\0')
+        {
+            a[i]=a[i+1];
+            i++;
+        }
+    }
+    n=strlen(a);
+    point=strchr(a,'.');
+    if(point) intn=point-a;
+    else intn=n;
+    for(i=19-intn+1;i<=19;i++) in[i]=a[i-20+intn]-'0';
+    for(i=20;i<20+n-intn-1;i++) in[i]=a[i-20+1+intn]-'0';
+    return 0;
 }
 void coutt (int a[])
 {
@@ -82,8 +104,23 @@ int com(int a[],int b[])
     }
     return 0;
 }
-void add(int a[],int b[],int ans[])
+void add(int af,int bf,int a[],int b[],int ans[]) //a，b的符号此时由af,bf决定，a[35],b[35]在此函数中无效
 {
+    if(af&&bf) ans[35]=1;//两个数都是负数，和一定为负数
+    else
+    {
+        if(af)
+        {
+            sub(0,0,b,a,ans);
+            return ;
+        }
+        if(bf)
+        {
+            sub(0,0,a,b,ans);
+            return ;
+        }
+
+    }
     int jinwei=0;
     int i,j,k;
     for(i=29;i>=0;i--)
@@ -93,14 +130,37 @@ void add(int a[],int b[],int ans[])
         ans[i]-=jinwei*10;
     }
 }
-void sub(int a[],int b[],int ans[])
+void sub(int af,int bf,int a[],int b[],int ans[])//a，b的符号此时由af,bf决定，a[35],b[35]在此函数中无效
 {
+    if(af)
+    {
+        if(bf)
+        {
+            sub(0,0,b,a,ans);
+            return ;
+        }
+        else
+        {
+            add(1,1,a,b,ans);
+            return ;
+        }
+
+    }
+    else if(bf)
+    {
+        add(0,0,a,b,ans);
+        return ;
+    }
+    else
+    {
+        ;// 什么事都没有发生，原样继续
+    }
     int jinwei=0;
     int i,j,k;
     if(com(a,b))
     {
         ans[35]=1;
-        sub(b,a,ans);
+        sub(0,0,b,a,ans);
         return ;
     }
     for(i=29;i>=0;i--)
@@ -122,6 +182,7 @@ void sub(int a[],int b[],int ans[])
 }
 void mul(int a[],int b[],int ans[])
 {
+    if(a[35]!=b[35]) ans[35]=1;
     int aans[30][200];
     int jinwei=0;
     int i,j,k;
@@ -139,10 +200,11 @@ void mul(int a[],int b[],int ans[])
     }
     for(i=0;i<30;i++)
             for(j=0;j<30;j++) aans[i][j]=aans[i][j+100];
-    for(i=0;i<30;i++) add(aans[i],ans,ans);
+    for(i=0;i<30;i++) add(0,0,aans[i],ans,ans);
 }
 void div(int a[],int b[],int ans[])
 {
+    if(a[35]!=b[35]) ans[35]=1;
     int i,j,k;
     int vvv[28][35]={0};
     int chengji[35]={0};
@@ -153,7 +215,7 @@ void div(int a[],int b[],int ans[])
     {
         for(;;)
         {
-            add(aans,vvv[i],aans);
+            add(0,0,aans,vvv[i],aans);
             for(j=0;j<30;j++) chengji[j]=0;
             mul(aans,b,chengji);
 //        cout<<i<<"  aans: ";coutt(aans);cout<<endl;
@@ -166,7 +228,7 @@ void div(int a[],int b[],int ans[])
             }
             else
             {
-                sub(aans,vvv[i],aans);
+                sub(0,0,aans,vvv[i],aans);
                 break;
             }
         }
