@@ -185,6 +185,11 @@ void mul(int a[],int b[],int ans[])
     int jinwei=0;
     int i,j,k;
     if(a[35]!=b[35]) ans[35]=1;
+
+    for(i=0;i<30;i++) if(a[i]!=0) break;
+    if(i==30) ans[35]=0;    //0乘任何数都得零，非负
+    for(i=0;i<30;i++) if(b[i]!=0) break;
+    if(i==30) ans[35]=0;
     for(i=0;i<30;i++)
             for(j=0;j<200;j++) aans[i][j]=0;
     for(i=29;i>=0;i--)
@@ -208,7 +213,14 @@ int div(int a[],int b[],int ans[])
     int chengji[35]={0};
     int aans[35]={0};
     for(i=0;i<30;i++) if(b[i]!=0) break;
-    if(i==30) return -1;
+        if(i==30) return -1;    //0不能作为除数
+    for(i=0;i<30;i++) if(a[i]!=0) break;
+        if(i==30)
+        {
+            for(i=0;i<30;i++) ans[i]=0;
+            return 0;
+        }
+    //0乘任何非零数都得零，除法函数成功，返回0
     if(a[35]!=b[35]) ans[35]=1;
     for(i=1;i<28;i++) vvv[i][i]=1;
     for(i=1;i<28;i++)
