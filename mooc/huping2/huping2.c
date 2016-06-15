@@ -17,7 +17,7 @@ int main(){
         if(boola||boolb)
         {
             printf("请重新输入两个数字 ：\n");
-            continue;
+            continue;  //重新输入
         }
         printf("%g+%g=%g\n%g-%g=%g\n%g*%g=%g\n%g/%g=%g\n",a,b,a+b,a,b,a-b,a,b,a*b,a,b,a/b);
         break;

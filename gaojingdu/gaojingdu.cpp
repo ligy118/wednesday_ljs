@@ -7,7 +7,7 @@ int com(int *,int *); // 比较函数 return 0 left大,1 right 大  范围两个
 void add(int ,int ,int *,int *,int *);// +
 void sub(int ,int ,int *,int *,int *);// -
 void mul(int *,int *,int *);// *
-void div(int *,int *,int *);// /
+int div(int *,int *,int *);// /    被除数为0 返回-1；除法正常运算 返回0；
 //有关符号，0为正，1为负
 int q=1;
 int main()
@@ -16,6 +16,7 @@ int main()
     int i,j,k;
     int left[100],right[100];
     int addans[100],subans[100],mulans[100],divans[100];
+    int divstatus; //divstatus 除法的状态（除数为0的情况）
 	printf("可以输入整数，小数，负数，但请不要输入错误的数据调戏~\n\n");
     while(1)
     {
@@ -36,10 +37,14 @@ int main()
         printf("乘法运算的结果: ");
         coutt(mulans);
         printf("\n");
-        div(left,right,divans);
-        printf("除法运算的结果: ");
-        coutt(divans);
-        printf("\n");
+        divstatus=div(left,right,divans);
+        if(divstatus) printf("被除数不能为0!\n");
+        else
+        {
+            printf("除法运算的结果: ");
+            coutt(divans);
+            printf("\n");
+        }
         printf("\n");
     }
 
@@ -98,6 +103,8 @@ int com(int a[],int b[])
 }
 void add(int af,int bf,int a[],int b[],int ans[]) //a，b的符号此时由af,bf决定，a[35],b[35]在此函数中无效
 {
+    int jinwei=0;
+    int i,j,k;
     if(af&&bf) ans[35]=1;//两个数都是负数，和一定为负数
     else
     {
@@ -113,8 +120,7 @@ void add(int af,int bf,int a[],int b[],int ans[]) //a，b的符号此时由af,bf
         }
 
     }
-    int jinwei=0;
-    int i,j,k;
+
     for(i=29;i>=0;i--)
     {
         ans[i]=a[i]+b[i]+jinwei;
@@ -124,6 +130,8 @@ void add(int af,int bf,int a[],int b[],int ans[]) //a，b的符号此时由af,bf
 }
 void sub(int af,int bf,int a[],int b[],int ans[])//a，b的符号此时由af,bf决定，a[35],b[35]在此函数中无效
 {
+    int jinwei=0;
+    int i,j,k;
     if(af)
     {
         if(bf)
@@ -147,8 +155,7 @@ void sub(int af,int bf,int a[],int b[],int ans[])//a，b的符号此时由af,bf�
     {
         ;// 什么事都没有发生，原样继续
     }
-    int jinwei=0;
-    int i,j,k;
+
     if(com(a,b))
     {
         ans[35]=1;
@@ -174,10 +181,10 @@ void sub(int af,int bf,int a[],int b[],int ans[])//a，b的符号此时由af,bf�
 }
 void mul(int a[],int b[],int ans[])
 {
-    if(a[35]!=b[35]) ans[35]=1;
     int aans[30][200];
     int jinwei=0;
     int i,j,k;
+    if(a[35]!=b[35]) ans[35]=1;
     for(i=0;i<30;i++)
             for(j=0;j<200;j++) aans[i][j]=0;
     for(i=29;i>=0;i--)
@@ -194,15 +201,16 @@ void mul(int a[],int b[],int ans[])
             for(j=0;j<30;j++) aans[i][j]=aans[i][j+100];
     for(i=0;i<30;i++) add(0,0,aans[i],ans,ans);
 }
-void div(int a[],int b[],int ans[])
+int div(int a[],int b[],int ans[])
 {
-    if(a[35]!=b[35]) ans[35]=1;
     int i,j,k;
     int vvv[28][35]={0};
     int chengji[35]={0};
     int aans[35]={0};
+    for(i=0;i<30;i++) if(b[i]!=0) break;
+    if(i==30) return -1;
+    if(a[35]!=b[35]) ans[35]=1;
     for(i=1;i<28;i++) vvv[i][i]=1;
-
     for(i=1;i<28;i++)
     {
         for(;;)
@@ -222,4 +230,5 @@ void div(int a[],int b[],int ans[])
             }
         }
     }
+    return 0;
 }
