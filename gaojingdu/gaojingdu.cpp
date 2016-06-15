@@ -1,6 +1,9 @@
 //乘法如果结果整数部分超过20位，小数部分超过10位，计算结果是不对的
-#include<stdio.h>
-#include<string.h>
+//除法因为用到了乘法，因为其中一些运算，精度更低，又懒的算，直接限定了输入的范围
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+using namespace std;
 int cinnn(int *); //输入函数，返回-1程序结束 返回0输入成功
 void coutt(int *); //输出函数
 int com(int *,int *); // 比较函数 return 0 left大,1 right 大  范围两个正数
@@ -21,7 +24,7 @@ int main()
     while(1)
     {
         for(i=0;i<100;i++) left[i]=right[i]=addans[i]=subans[i]=mulans[i]=divans[i]=0;
-        printf("输入两个实数，以空格或者换行隔开，或者输入q离开\n");
+        printf("输入两个大于/小于 正/负10^-4，小于/大于 正/负10^10的实数，以空格或者换行隔开，或者输入q离开\n");
         status=cinnn(left);
         if(status==-1) {printf("bye~\n");return 0;}
         cinnn(right);
@@ -187,9 +190,13 @@ void mul(int a[],int b[],int ans[])
     if(a[35]!=b[35]) ans[35]=1;
 
     for(i=0;i<30;i++) if(a[i]!=0) break;
-    if(i==30) ans[35]=0;    //0乘任何数都得零，非负
-    for(i=0;i<30;i++) if(b[i]!=0) break;
-    if(i==30) ans[35]=0;
+    for(j=0;j<30;j++) if(b[j]!=0) break;
+        if(i==30||j==30)
+        {
+            for(i=0;i<30;i++) ans[i]=0;
+            return ;
+        }
+    //0乘任数都为0
     for(i=0;i<30;i++)
             for(j=0;j<200;j++) aans[i][j]=0;
     for(i=29;i>=0;i--)
@@ -208,7 +215,7 @@ void mul(int a[],int b[],int ans[])
 }
 int div(int a[],int b[],int ans[])
 {
-    int i,j,k;
+    int i,j,k,l;
     int vvv[28][35]={0};
     int chengji[35]={0};
     int aans[35]={0};
@@ -220,20 +227,28 @@ int div(int a[],int b[],int ans[])
             for(i=0;i<30;i++) ans[i]=0;
             return 0;
         }
-    //0乘任何非零数都得零，除法函数成功，返回0
+    //0除以任何非零数都得零，除法函数成功，返回0
     if(a[35]!=b[35]) ans[35]=1;
+    for(i=0;i<28;i++) for(j=0;j<35;j++) vvv[i][j]=0;
     for(i=1;i<28;i++) vvv[i][i]=1;
-    for(i=1;i<28;i++)
+    for(i=10;i<28;i++)
     {
-        for(;;)
+        for(l=0;l<9;l++)
         {
             add(0,0,aans,vvv[i],aans);
             for(j=0;j<30;j++) chengji[j]=0;
             mul(aans,b,chengji);
+    /*        coutt(vvv[i]);
+            cout<<endl<<"aans   ";
+            coutt(aans);
+            cout<<endl<<"b   ";
+            coutt(b);
+            cout<<endl<<"chengji    ";
+            coutt(chengji);
+            cout<<endl<<endl;*/
             if(!com(a,chengji))
             {
                 for(k=0;k<30;k++) ans[k]=aans[k];
-
             }
             else
             {
